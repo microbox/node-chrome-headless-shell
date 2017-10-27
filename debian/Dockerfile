@@ -1,4 +1,4 @@
-FROM debian:jessie-slim
+FROM debian:stable-slim
 RUN apt-get update && apt-get install -yq fontconfig fonts-dejavu && rm -r /var/lib/apt/lists/*
 ADD ./node-v8.8.1-linux-x64/bin/node              /bin
 ADD chrome.tar                                    /
