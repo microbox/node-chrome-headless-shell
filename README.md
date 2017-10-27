@@ -7,5 +7,5 @@ Chrome Headless Shell
 
 #### Components
 
-- Chromium Headless Shell: 62.0.3201.2
+- Chromium Headless Shell: 63.0.3230.2
 - Node.js 8.8.1
