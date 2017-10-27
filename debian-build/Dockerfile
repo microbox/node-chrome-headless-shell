@@ -1,4 +1,4 @@
-FROM yukinying/chrome-headless:62.0.3201.2
+FROM yukinying/chrome-headless:63.0.3230.2
 
 # build rootfs
 RUN rm -f chrome/Dockerfile
