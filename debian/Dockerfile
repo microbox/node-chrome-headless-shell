@@ -1,6 +1,6 @@
 FROM debian:stable-slim
 RUN apt-get update && apt-get install -yq fontconfig fonts-dejavu && rm -r /var/lib/apt/lists/* \
-    groupadd -r microbox && useradd -r -g microbox -G audio,video -d /home -m -s /bin/bash microbox
+    groupadd -g 1000 microbox && useradd -u 1000 -g microbox -G audio,video -d /home -m -s /bin/bash microbox
 USER microbox
 ENV CHROMIUM_HEADLESS_SHELL_VERSION=63.0.3230.2 NODE_VERSION=8.8.1
 ADD ./node-v8.8.1-linux-x64/bin/node              /bin
