@@ -8,9 +8,15 @@ notifications:
     on_success: never
     on_failure: change
 
+before_install:
+  - export LATEST_VERSION=$(wget -qO- https://nodejs.org/dist/latest-v8.x/ | sed -nE 's|.*>node-v(.*)\.pkg</a>.*|\1|p')
+  - echo $LATEST_VERSION
+  - export NODE_VERSION=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo $LATEST_VERSION; else echo $TRAVIS_BRANCH ; fi`
+  - echo $NODE_VERSION
+
 script:
-  - wget https://nodejs.org/download/release/v8.8.1/node-v8.8.1-linux-x64.tar.gz -O debian/node-v8.8.1-linux-x64.tar.gz
-  - cd debian && tar -zxvf node-v8.8.1-linux-x64.tar.gz && cd ..
+  - wget https://nodejs.org/download/release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -O debian/node-v${NODE_VERSION}-linux-x64.tar.gz
+  - cd debian && tar -zxvf node-v${NODE_VERSION}-linux-x64.tar.gz && mv node-v${NODE_VERSION}-linux-x64 node-linux-x64 && cd ..
   - docker build -t node-headless-debian-build debian-build
   - export CID=$(docker create node-headless-debian-build)
   - mkdir -p debian/lib/x86_64-linux-gnu/ debian/usr/lib/x86_64-linux-gnu/
@@ -28,7 +34,7 @@ script:
 after_success:
   - export REPO=$TRAVIS_REPO_SLUG
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-  - docker build -t $REPO:$TAG debian
+  - docker build -t $REPO:$TAG --build-arg NODE_VERSION=$NODE_VERSION debian
   - docker images
   - docker login -u $DOCKER_USER -p $DOCKER_PASS
   - docker push $REPO
