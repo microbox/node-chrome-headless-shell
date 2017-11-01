@@ -1,4 +1,5 @@
-FROM yukinying/chrome-headless:63.0.3230.2
+ARG CHROME_VERSION=latest
+FROM yukinying/chrome-headless:${CHROME_VERSION}
 
 # build rootfs
 RUN rm -f chrome/Dockerfile

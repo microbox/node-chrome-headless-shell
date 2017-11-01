@@ -11,13 +11,15 @@ notifications:
 before_install:
   - export NODE_VERSION=$(wget -qO- https://nodejs.org/dist/latest-v8.x/ | sed -nE 's|.*>node-v(.*)\.pkg</a>.*|\1|p')
   - echo $NODE_VERSION
+  - export CHROME_VERSION=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo 'latest'; else echo $TRAVIS_BRANCH ; fi`
+  - echo $CHROME_VERSION
 
 install:
   - wget https://nodejs.org/download/release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz -O debian/node-v${NODE_VERSION}-linux-x64.tar.gz
   - cd debian && tar -zxvf node-v${NODE_VERSION}-linux-x64.tar.gz && mv node-v${NODE_VERSION}-linux-x64 node-linux-x64 && cd ..
 
 script:
-  - docker build -t node-headless-debian-build debian-build
+  - docker build -t node-headless-debian-build --build-arg CHROME_VERSION=$CHROME_VERSION debian-build
   - export CID=$(docker create node-headless-debian-build)
   - mkdir -p debian/lib/x86_64-linux-gnu/ debian/usr/lib/x86_64-linux-gnu/
   - docker cp $CID:/chrome.tar debian
